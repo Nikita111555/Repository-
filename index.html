@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир Блинов — Рецепты и Калькулятор</title>
+    <!-- Подключение внешних стилей -->
+    <style>
+        /* --- ЦВЕТОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ --- */
+:root {
+    --bg-cream-light: #FFFDF9;
+    --bg-cream-dark: #F5EBE0;
+    --accent-brown-light: #D4A373;
+    --accent-brown-medium: #A98467;
+    --accent-brown-dark: #4A3728;
+    --text-dark: #332211;
+    --text-light: #6D5947;
+    --white: #FFFFFF;
+    --error-color: #E63946;
+    --success-color: #2A9D8F;
+    --shadow: 0 4px 15px rgba(74, 55, 40, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* --- СБРОС СТИЛЕЙ И БАЗОВЫЕ НАСТРОЙКИ --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-cream-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+section {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--accent-brown-dark);
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--accent-brown-light);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* --- ШАПКА И НАВИГАЦИЯ (Mobile-first) --- */
+header {
+    background-color: var(--bg-cream-dark);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-brown-dark);
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--accent-brown-light);
+}
+
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.burger-menu span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--accent-brown-dark);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+/* Анимация бургера */
+.burger-menu.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+.burger-menu.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+.nav-menu {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-cream-dark);
+    padding: 80px 20px 40px;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    display: flex;
+}
+
+.nav-menu.active {
+    top: 0;
+}
+
+.nav-link {
+    color: var(--accent-brown-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--accent-brown-light);
+}
+
+/* --- ГЛАВНАЯ СЕКЦИЯ (HERO) --- */
+#home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+    padding-top: 40px;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    color: var(--accent-brown-dark);
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--accent-brown-medium);
+    color: var(--white);
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--accent-brown-dark);
+    transform: translateY(-2px);
+}
+
+.hero-image {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 50% 20% 40% 35% / 40% 40% 60% 50%;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 8px solid var(--bg-cream-dark);
+}
+
+.hero-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+/* --- СЕКЦИЯ КАЛЬКУЛЯТОРА И РЕЦЕПТОВ --- */
+.calculator-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background-color: var(--bg-cream-dark);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.recipe-selector, .portions-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.recipe-selector label, .portions-input label {
+    font-weight: 600;
+    color: var(--accent-brown-dark);
+}
+
+select, input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--accent-brown-light);
+    border-radius: 8px;
+    background-color: var(--white);
+    color: var(--text-dark);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+select:focus, input[type="number"]:focus {
+    border-color: var(--accent-brown-dark);
+}
+
+.calc-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.calc-display {
+    background-color: var(--white);
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid var(--accent-brown-medium);
+}
+
+.calc-display h3 {
+    color: var(--accent-brown-dark);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.energy-info {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: var(--bg-cream-light);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    justify-content: space-around;
+}
+
+.energy-info span {
+    color: var(--accent-brown-dark);
+}
+
+.ingredients-list {
+    list-style: none;
+}
+
+.ingredients-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--bg-cream-dark);
+}
+
+.ingredients-list li:last-child {
+    border-bottom: none;
+}
+
+/* --- СЕКЦИЯ ОТЗЫВОВ --- */
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-card {
+    background-color: var(--white);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--bg-cream-dark);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.reviewer-name {
+    font-weight: bold;
+    color: var(--accent-brown-dark);
+}
+
+.review-rating {
+    color: #FFB020;
+}
+
+.review-text {
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* --- СЕКЦИЯ ОБРАТНОЙ СВЯЗИ --- */
+.contact-form {
+    background-color: var(--white);
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--accent-brown-dark);
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--accent-brown-medium);
+    border-radius: 8px;
+    background-color: var(--bg-cream-light);
+    font-size: 1rem;
+    outline: none;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--accent-brown-dark);
+    box-shadow: 0 0 5px rgba(169, 132, 103, 0.3);
+}
+
+.form-group.error input, .form-group.error textarea {
+    border-color: var(--error-color);
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.form-group.error .error-message {
+    display: block;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-success-msg {
+    display: none;
+    background-color: var(--success-color);
+    color: var(--white);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* --- ПОДВАЛ --- */
+footer {
+    background-color: var(--accent-brown-dark);
+    color: var(--bg-cream-dark);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    margin-top: 40px;
+}
+
+/* --- МЕДИА-ЗАПРОСЫ (Десктоп версии) --- */
+@media (min-width: 768px) {
+    .burger-menu {
+        display: none;
+    }
+
+    .nav-menu {
+        position: static;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        width: auto;
+        background-color: transparent;
+    }
+
+    #home {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        padding: 80px 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+    }
+
+    .hero-image img {
+        height: 400px;
+    }
+
+    .calculator-wrapper {
+        flex-direction: row;
+    }
+
+    .calc-controls {
+        flex: 1;
+    }
+
+    .calc-display {
+        flex: 1;
+    }
+
+    .reviews-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .review-card {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#home" class="logo">Мир<span>Блинов</span></a>
+            <div class="burger-menu" id="burgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link">Главная</a>
+                <a href="#calculator" class="nav-link">Калькулятор</a>
+                <a href="#reviews" class="nav-link">Отзывы</a>
+                <a href="#contact" class="nav-link">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home">
+        <div class="hero-content">
+            <h1>Идеальные блины<br>каждый раз</h1>
+            <p>Выбирайте проверенные рецепты от классических до диетических и рассчитывайте пропорции ингредиентов под любое количество гостей за одну секунду.</p>
+            <a href="#calculator" class="btn">Открыть калькулятор</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://unsplash.com" alt="Аппетитные блины">
+        </div>
+    </section>
+
+    <section id="calculator">
+        <h2 class="section-title">Калькулятор рецептов</h2>
+        <div class="calculator-wrapper">
+            
+            <div class="calc-controls">
+                <div class="recipe-selector">
+                    <label for="recipeSelect">Выберите тип блинов:</label>
+
+                    <select id="recipeSelect">
+                        <option value="classic">Классические на молоке</option>
+                        <option value="kefir">Ажурные на кефире</option>
+                        <option value="diet">Диетические (овсяные)</option>
+                        <option value="chocolate">Шоколадные с какао</option>
+                        <option value="pancakes">Американские панкейки (пышные)</option>
+                        <option value="yeast">Старорусские на дрожжах</option>
+                    </select>
+
+
+                </div>
+
+                <div class="portions-input">
+                    <label for="portionsCount">Количество порций (блинов):</label>
+                    <input type="number" id="portionsCount" value="10" min="1" max="100">
+                </div>
+            </div>
+
+            <div class="calc-display">
+                <h3 id="recipeTitle">Классические на молоке</h3>
+                <div class="energy-info">
+                    <div>Калории: <span id="totalCalories">0</span> ккал</div>
+                    <div>БЖУ: <span id="bjuRatio">0/0/0</span></div>
+                </div>
+                <ul class="ingredients-list" id="ingredientsList">
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="reviews">
+        <h2 class="section-title">Отзывы кулинаров</h2>
+        <div class="reviews-container">
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="reviewer-name">Мария Иванова</span>
+                    <span class="review-rating">★★★★★</span>
+                </div>
+                <p class="review-text">«Блины на кефире по вашему рецепту получились просто волшебными! Действительно ажурные, с кучей дырочек. Калькулятор очень выручил, когда приехали гости».</p>
+            </div>
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="reviewer-name">Александр П.</span>
+                    <span class="review-rating">★★★★☆</span>
+                </div>
+                <p class="review-text">«Попробовал диетический вариант. Для овсяных блинов — вкус отличный. Приложение удобное, всё лаконично и понятно с телефона».</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Остались вопросы?</h2>
+        <div class="contact-form">
+            <div class="form-success-msg" id="successMessage">Сообщение успешно отправлено! Мы ответим вам в ближайшее время.</div>
+            <form id="feedbackForm" novalidate>
+                <div class="form-group" id="nameGroup">
+                    <label for="formName">Ваше имя</label>
+                    <input type="text" id="formName" placeholder="Введите имя">
+                    <div class="error-message">Имя должно содержать не менее 2 символов</div>
+                </div>
+                <div class="form-group" id="emailGroup">
+                    <label for="formEmail">E-mail</label>
+                    <input type="email" id="formEmail" placeholder="example@mail.com">
+                    <div class="error-message">Введите корректный адрес электронной почты</div>
+                </div>
+                <div class="form-group" id="messageGroup">
+                    <label for="formMessage">Ваше сообщение</label>
+                    <textarea id="formMessage" placeholder="Напишите ваш отзыв или вопрос..."></textarea>
+                    <div class="error-message">Сообщение не должно быть пустым (минимум 10 символов)</div>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Отправить</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Мир Блинов. Разработано с любовью к кулинарии.</p>
+    </footer>
+
+    <!-- Подключение внешнего JavaScript сценария -->
+    <script>
+        /* --- ДАННЫЕ РЕЦЕПТОВ (Базовые значения на 1 блин) --- */
+/* --- ДАННЫЕ РЕЦЕПТОВ (Базовые значения на 1 блин) --- */
+const recipesData = {
+    classic: {
+        title: "Классические на молоке",
+        caloriesPerPortion: 85,
+        bju: "3г / 2.5г / 12г",
+        ingredients: [
+            { name: "Молоко", baseQty: 40, unit: "мл" },
+            { name: "Мука пшеничная", baseQty: 18, unit: "г" },
+            { name: "Яйцо куриное", baseQty: 0.2, unit: "шт" },
+            { name: "Сахар", baseQty: 2, unit: "г" },
+            { name: "Растительное масло", baseQty: 1.5, unit: "мл" }
+        ]
+    },
+    kefir: {
+        title: "Ажурные на кефире",
+        caloriesPerPortion: 92,
+        bju: "3.5г / 3г / 13г",
+        ingredients: [
+            { name: "Кефир", baseQty: 45, unit: "мл" },
+            { name: "Кипяток", baseQty: 15, unit: "мл" },
+            { name: "Мука пшеничная", baseQty: 20, unit: "г" },
+            { name: "Яйцо куриное", baseQty: 0.25, unit: "шт" },
+            { name: "Сода", baseQty: 0.1, unit: "ч.л." },
+            { name: "Масло сливочное (для смазывания)", baseQty: 2, unit: "г" }
+        ]
+    },
+    diet: {
+        title: "Диетические (овсяные)",
+        caloriesPerPortion: 60,
+        bju: "4г / 1.5г / 8г",
+        ingredients: [
+            { name: "Овсяная мука (или хлопья)", baseQty: 15, unit: "г" },
+            { name: "Молоко обезжиренное", baseQty: 35, unit: "мл" },
+            { name: "Белок яичный", baseQty: 0.4, unit: "шт" },
+            { name: "Сахарозаменитель", baseQty: 0.1, unit: "г" },
+            { name: "Кокосовое масло для сковороды", baseQty: 0.5, unit: "мл" }
+        ]
+    },
+    chocolate: {
+        title: "Шоколадные десертные",
+        caloriesPerPortion: 105,
+        bju: "3.2г / 3.8г / 14.5г",
+        ingredients: [
+            { name: "Молоко", baseQty: 42, unit: "мл" },
+            { name: "Мука пшеничная", baseQty: 16, unit: "г" },
+            { name: "Какао-порошок", baseQty: 3, unit: "г" },
+            { name: "Темный шоколад (растопленный)", baseQty: 4, unit: "г" },
+            { name: "Яйцо куриное", baseQty: 0.2, unit: "шт" },
+            { name: "Сахарная пудра", baseQty: 3, unit: "г" }
+        ]
+    },
+    pancakes: {
+        title: "Американские панкейки",
+        caloriesPerPortion: 120,
+        bju: "4г / 4.2г / 16.5г",
+        ingredients: [
+            { name: "Молоко или пахта", baseQty: 35, unit: "мл" },
+            { name: "Мука пшеничная", baseQty: 22, unit: "г" },
+            { name: "Сливочное масло (растопленное)", baseQty: 3, unit: "г" },
+            { name: "Яйцо куриное", baseQty: 0.25, unit: "шт" },
+            { name: "Разрыхлитель теста", baseQty: 0.3, unit: "г" },
+            { name: "Сахар", baseQty: 3, unit: "г" }
+        ]
+    },
+    yeast: {
+        title: "Старорусские на дрожжах",
+        caloriesPerPortion: 98,
+        bju: "3.6г / 2.8г / 14.2г",
+        ingredients: [
+            { name: "Молоко (теплое)", baseQty: 50, unit: "мл" },
+            { name: "Мука пшеничная", baseQty: 22, unit: "г" },
+            { name: "Дрожжи прессованные", baseQty: 1.2, unit: "г" },
+            { name: "Яйцо куриное", baseQty: 0.15, unit: "шт" },
+            { name: "Сахар", baseQty: 2, unit: "г" },
+            { name: "Масло топленое (в тесто)", baseQty: 1.5, unit: "г" }
+        ]
+    }
+};
+
+
+/* --- ДОКУМЕНТ ЗАГРУЖЕН (Инициализация) --- */
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Элементы мобильного меню
+    const burgerMenu = document.getElementById('burgerMenu');
+    const navMenu = document.getElementById('navMenu');
+
+    // Переключение бургер-меню
+    burgerMenu.addEventListener('click', () => {
+        burgerMenu.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Закрытие меню при клике на ссылки
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            burgerMenu.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // Элементы калькулятора
+    const recipeSelect = document.getElementById('recipeSelect');
+    const portionsInput = document.getElementById('portionsCount');
+    const recipeTitle = document.getElementById('recipeTitle');
+    const totalCalories = document.getElementById('totalCalories');
+    const bjuRatio = document.getElementById('bjuRatio');
+    const ingredientsList = document.getElementById('ingredientsList');
+
+    // Функция обновления калькулятора порций
+    function updateCalculator() {
+        const selectedKey = recipeSelect.value;
+        const portions = parseInt(portionsInput.value) || 1;
+        const currentRecipe = recipesData[selectedKey];
+
+        // Обновляем текстовые значения
+        recipeTitle.textContent = currentRecipe.title;
+        totalCalories.textContent = currentRecipe.caloriesPerPortion * portions;
+        bjuRatio.textContent = currentRecipe.bju;
+
+        // Очищаем и заново строим список ингредиентов
+        ingredientsList.innerHTML = '';
+        currentRecipe.ingredients.forEach(ing => {
+            const li = document.createElement('li');
+            
+            // Расчет и форматирование количества
+            let finalQty = ing.baseQty * portions;
+            if (finalQty % 1 !== 0) {
+                finalQty = finalQty.toFixed(1);
+            }
+
+            li.innerHTML = `<span>${ing.name}</span> <strong>${finalQty} ${ing.unit}</strong>`;
+            ingredientsList.appendChild(li);
+        });
+    }
+
+    // Обработчики событий калькулятора
+    recipeSelect.addEventListener('change', updateCalculator);
+    portionsInput.addEventListener('input', updateCalculator);
+
+    // Первичный расчет при старте
+    updateCalculator();
+
+    /* --- ВАЛИДАЦИЯ ФОРМЫ --- */
+    const feedbackForm = document.getElementById('feedbackForm');
+    const successMessage = document.getElementById('successMessage');
+
+    feedbackForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let isFormValid = true;
+
+        const nameInput = document.getElementById('formName');
+        const emailInput = document.getElementById('formEmail');
+        const messageInput = document.getElementById('formMessage');
+
+        // Регулярное выражение для валидации почты
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+\$/;
+
+        // Проверка Имени
+        if (nameInput.value.trim().length < 2) {
+            document.getElementById('nameGroup').classList.add('error');
+            isFormValid = false;
+        } else {
+            document.getElementById('nameGroup').classList.remove('error');
+        }
+
+        // Проверка Email
+        if (!emailRegex.test(emailInput.value.trim())) {
+            document.getElementById('emailGroup').classList.add('error');
+            isFormValid = false;
+        } else {
+            document.getElementById('emailGroup').classList.remove('error');
+        }
+
+        // Проверка Сообщения
+        if (messageInput.value.trim().length < 10) {
+            document.getElementById('messageGroup').classList.add('error');
+            isFormValid = false;
+        } else {
+            document.getElementById('messageGroup').classList.remove('error');
+        }
+
+        // Действия при успешной валидации
+        if (isFormValid) {
+            successMessage.style.display = 'block';
+            feedbackForm.reset();
+            
+            // Скрытие плашки успеха через 4 секунды
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 4000);
+        }
+    });
+});
+ 
+    </script>
+</body>
+</html>
